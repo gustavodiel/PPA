@@ -13,7 +13,7 @@ make
 
 Digitar no terminal:
 ```sh
-./main_matrix COLUNAS LINHAS
+./main_matrix LINHAS COLUNAS
 ```
 
 
