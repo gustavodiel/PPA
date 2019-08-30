@@ -29,4 +29,4 @@ Por exemplo:
 - *matrizv3.h*: Definição dos métodos e estrutura da matriz
 - *README.md*: Este arquivo
 
-PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/001-matrizSeq/README
+PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/001-matrizSeq/README.md
