@@ -72,7 +72,11 @@ int mgerar(mymatriz *matriz, int valor) {
 
     for (int i = 0; i < matriz->lin; ++i) {
         for (int j = 0; j < matriz->col; ++j) {
-            matriz->matriz[i][j] = valor;
+            int newValue = valor;
+            if (valor == -9999) {
+                newValue = rand() % matriz->lin * matriz->col; // Limitando o tamanho do numero aleatorio para LIN * COL (Sem motivo)
+            }
+            matriz->matriz[i][j] = newValue;
         }
     }
 
