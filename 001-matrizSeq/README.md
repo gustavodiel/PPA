@@ -23,10 +23,10 @@ Por exemplo:
 
 
 ## Estrutura dos arquivos
-- *mainEx01.c*: Código contendo o `int main()`
-- *Makefile*: Arquivo para poder executar o `make`
-- *matrizv3.c*: Implementação dos métodos de matriz
-- *matrizv3.h*: Definição dos métodos e estrutura da matriz
-- *README.md*: Este arquivo
+- **mainEx01.c**: Código contendo o `int main()`
+- **Makefile**: Arquivo para poder executar o `make`
+- **matrizv3.c**: Implementação dos métodos de matriz
+- **matrizv3.h**: Definição dos métodos e estrutura da matriz
+- **README.md**: Este arquivo
 
 PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/001-matrizSeq/README.md
