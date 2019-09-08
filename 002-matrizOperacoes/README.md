@@ -1,13 +1,35 @@
-###################################################
-### Disciplina de Programação Paralela Avançada ###
-###################################################
-Revisão: ago/2019
+
+# Disciplina de Programação Paralela Avançada
+
+Revisão: set/2019
 Linguagem: C
 Versão: v3 (tools, matriz, matriz-operacoes)
 Executáveis: mainEx02 e gmat
 
-mainEx02: código principal de teste das funções
-gmat: gerador de matrizes NxM em arquivo
+
+PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/002-matrizOperacoes/README.md
+
+
+## Compilar
+
+Digitar no terminal:
+```sh
+make clean
+make
+```
+
+
+## Executar
+
+Digitar no terminal:
+```sh
+./mainEx01 ARQV_MATRIZ_A ARQV_MATRIZ_B
+```
+
+Por exemplo:
+```sh
+./mainEx01 mat_a3x4.example mat_b4x3.example
+```
 
 ARQUIVOS:
  * README-res: resultado da execução de exemplo (./main mat_a3x4.example mat_b4x3.example);
