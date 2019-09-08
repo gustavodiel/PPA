@@ -23,12 +23,12 @@ make
 
 Digitar no terminal:
 ```sh
-./mainEx01 ARQV_MATRIZ_A ARQV_MATRIZ_B
+./mainEx02 ARQV_MATRIZ_A ARQV_MATRIZ_B
 ```
 
 Por exemplo:
 ```sh
-./mainEx01 mat_a3x4.example mat_b4x3.example
+./mainEx02 mat_a3x4.example mat_b4x3.example
 ```
 
 ARQUIVOS:
