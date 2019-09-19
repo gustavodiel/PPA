@@ -7,6 +7,110 @@
 
 #include "matrizv3.h"
 
+int mmsubmatriz(matriz_bloco_t *mat_suba, matriz_bloco_t *mat_subb, matriz_bloco_t *mat_subc)
+{
+
+  if (!mat_suba || !mat_subb || !mat_subc)
+  {
+    printf("[mmsubmatriz] ERROR: Out of memory\n");
+    return 1;
+  }
+
+  int i, j, k;
+  for (i = mat_suba->bloco->lin_inicio; i < mat_suba->bloco->lin_fim; i++)
+  {
+    for (k = mat_suba->bloco->col_inicio; k < mat_suba->bloco->col_fim; k++)
+    {
+      for (j = mat_subb->bloco->col_inicio; j < mat_subb->bloco->col_fim; j++)
+      {
+        mat_subc->matriz->matriz[i][j] += mat_suba->matriz->matriz[i][k] * mat_subb->matriz->matriz[k][j];
+      }
+    }
+  }
+  return 0;
+}
+
+matriz_bloco_t **csubmatrizv2(int mat_lin, int mat_col, int divisor)
+{
+  matriz_bloco_t **block = NULL;
+  block = (matriz_bloco_t **)calloc(divisor, sizeof(matriz_bloco_t *));
+
+  if (!block)
+  {
+    printf("[csubmatrizv2] ERROR: Out of memory\n");
+    return NULL;
+  }
+
+  for (int i = 0; i < divisor; i++)
+  {
+    block[i] = (matriz_bloco_t *)malloc(sizeof(matriz_bloco_t));
+    block[i]->bloco = (bloco_t *)malloc(sizeof(bloco_t));
+  }
+
+  for (int i = 0; i < divisor; i++)
+  {
+    mymatriz *matBl = (mymatriz*)malloc(sizeof(mymatriz));
+    matBl->lin = mat_lin;
+    matBl->col = mat_col;
+
+    malocar(matBl);
+    mzerar(matBl);
+
+    block[i]->matriz = matBl;
+    block[i]->bloco->lin_inicio = 0;
+    block[i]->bloco->lin_fim = mat_lin;
+    block[i]->bloco->col_inicio = 0;
+    block[i]->bloco->col_fim = mat_col;
+  }
+
+  return block;
+}
+
+matriz_bloco_t **particionar_matriz(int **matriz, int mat_lin, int mat_col, int orientacao, int divisor)
+{
+  matriz_bloco_t **block = NULL;
+  block = (matriz_bloco_t **) calloc(divisor, sizeof(matriz_bloco_t*));
+
+  if (!block || !matriz) {
+    printf("ERROR: Out of memory\n");
+    return NULL;
+  }
+
+  for(int i = 0; i< divisor; i++){
+    block[i] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
+    block[i]->bloco = (bloco_t *) malloc(sizeof(bloco_t));
+  }
+
+
+  mymatriz *megaMatriz = (mymatriz*)malloc(sizeof(mymatriz));
+  megaMatriz->matriz = matriz;
+
+  if (orientacao == 0)
+  {
+    int desloc = mat_lin/divisor;
+    for(int i=0; i<divisor; i++){
+      block[i]->matriz = megaMatriz;
+      block[i]->bloco->lin_inicio = i * desloc;
+      block[i]->bloco->lin_fim = (i+1) * desloc;
+      block[i]->bloco->col_inicio = 0;
+      block[i]->bloco->col_fim = mat_col;
+
+    }
+    block[divisor-1]->bloco->lin_fim = mat_lin;
+  } else {
+    int desloc = mat_col/divisor;
+    for(int i=0; i<divisor; i++){
+      block[i]->matriz = megaMatriz;
+      block[i]->bloco->lin_inicio = 0;
+      block[i]->bloco->lin_fim = mat_lin;
+      block[i]->bloco->col_inicio = i * desloc;
+      block[i]->bloco->col_fim = (i+1) * desloc;
+    }
+    block[divisor-1]->bloco->col_fim = mat_col;
+  }
+  return block;
+}
+
 int matrizesNulas(mymatriz *a, mymatriz *b)
 {
   return (a == NULL || b == NULL);
@@ -148,27 +252,27 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
   case 0:
     multiplicarMatriz = &multIJK;
     outterLoop = mat_a->lin;
-    middleLoop = mat_b->col;
-    innerLoop = mat_b->lin;
+    middleLoop = mat_b->lin;
+    innerLoop = mat_b->col;
     break;
 
   case 1:
     multiplicarMatriz = &multIKJ;
     outterLoop = mat_a->lin;
     middleLoop = mat_b->col;
-    innerLoop = mat_a->col;
+    innerLoop = mat_b->lin;
     break;
 
   case 2:
     multiplicarMatriz = &multJKI;
     outterLoop = mat_b->col;
-    middleLoop = mat_a->col;
+    middleLoop = mat_b->lin;
     innerLoop = mat_a->lin;
     break;
 
   case 3:
     multiplicarMatriz = &multJIK;
-    outterLoop = mat_a->col;
+    outterLoop = mat_b->lin;
     middleLoop = mat_a->lin;
     innerLoop = mat_b->col;
     break;
@@ -176,13 +280,13 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
   case 4:
     multiplicarMatriz = &multKJI;
     outterLoop = mat_b->col;
-    middleLoop = mat_a->col;
+    middleLoop = mat_b->lin;
     innerLoop = mat_a->lin;
     break;
 
   case 5:
     multiplicarMatriz = &multKIJ;
-    outterLoop = mat_b->col;
+    outterLoop = mat_b->lin;
     middleLoop = mat_b->col;
     innerLoop = mat_a->lin;
     break;
@@ -212,8 +316,7 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
     {
       for (k = 0; k < innerLoop; ++k)
       {
-        // (*multiplicarMatriz)(result, mat_a, mat_b, i, j, k);
-        result->matriz[i][j] += mat_a->matriz[i][k] * mat_b->matriz[j][k];
+        (*multiplicarMatriz)(result, mat_a, mat_b, i, j, k);
       }
     }
   }
