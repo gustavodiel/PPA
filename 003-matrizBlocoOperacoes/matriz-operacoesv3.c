@@ -7,6 +7,16 @@
 
 #include "matrizv3.h"
 
+int matrizesNulas(void *a, void *b)
+{
+  return (a == NULL || b == NULL);
+}
+
+int podeSomarMatrizes(mymatriz *a, mymatriz *b)
+{
+  return a->col == b->col && a->lin == b->lin;
+}
+
 int mmsubmatriz(matriz_bloco_t *mat_suba, matriz_bloco_t *mat_subb, matriz_bloco_t *mat_subc)
 {
 
@@ -49,7 +59,7 @@ matriz_bloco_t **csubmatrizv2(int mat_lin, int mat_col, int divisor)
 
   for (int i = 0; i < divisor; i++)
   {
-    mymatriz *matBl = (mymatriz*)malloc(sizeof(mymatriz));
+    mymatriz *matBl = (mymatriz *)malloc(sizeof(mymatriz));
     matBl->lin = mat_lin;
     matBl->col = mat_col;
 
@@ -69,56 +79,50 @@ matriz_bloco_t **csubmatrizv2(int mat_lin, int mat_col, int divisor)
 matriz_bloco_t **particionar_matriz(int **matriz, int mat_lin, int mat_col, int orientacao, int divisor)
 {
   matriz_bloco_t **block = NULL;
-  block = (matriz_bloco_t **) calloc(divisor, sizeof(matriz_bloco_t*));
+  block = (matriz_bloco_t **)calloc(divisor, sizeof(matriz_bloco_t *));
 
-  if (!block || !matriz) {
-    printf("ERROR: Out of memory\n");
+  if (matrizesNulas(matriz, block))
+  {
+    printf("[particionar_matriz] ERROR: Out of memory\n");
     return NULL;
   }
 
-  for(int i = 0; i< divisor; i++){
-    block[i] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
-    block[i]->bloco = (bloco_t *) malloc(sizeof(bloco_t));
+  for (int i = 0; i < divisor; i++)
+  {
+    block[i] = (matriz_bloco_t *)malloc(sizeof(matriz_bloco_t));
+    block[i]->bloco = (bloco_t *)malloc(sizeof(bloco_t));
   }
 
-
-  mymatriz *megaMatriz = (mymatriz*)malloc(sizeof(mymatriz));
+  mymatriz *megaMatriz = (mymatriz *)malloc(sizeof(mymatriz));
   megaMatriz->matriz = matriz;
 
   if (orientacao == 0)
   {
-    int desloc = mat_lin/divisor;
-    for(int i=0; i<divisor; i++){
+    int desloc = mat_lin / divisor;
+    for (int i = 0; i < divisor; i++)
+    {
       block[i]->matriz = megaMatriz;
       block[i]->bloco->lin_inicio = i * desloc;
-      block[i]->bloco->lin_fim = (i+1) * desloc;
+      block[i]->bloco->lin_fim = (i + 1) * desloc;
       block[i]->bloco->col_inicio = 0;
       block[i]->bloco->col_fim = mat_col;
-
     }
-    block[divisor-1]->bloco->lin_fim = mat_lin;
-  } else {
-    int desloc = mat_col/divisor;
-    for(int i=0; i<divisor; i++){
+    block[divisor - 1]->bloco->lin_fim = mat_lin;
+  }
+  else
+  {
+    int desloc = mat_col / divisor;
+    for (int i = 0; i < divisor; i++)
+    {
       block[i]->matriz = megaMatriz;
       block[i]->bloco->lin_inicio = 0;
       block[i]->bloco->lin_fim = mat_lin;
       block[i]->bloco->col_inicio = i * desloc;
-      block[i]->bloco->col_fim = (i+1) * desloc;
+      block[i]->bloco->col_fim = (i + 1) * desloc;
     }
-    block[divisor-1]->bloco->col_fim = mat_col;
+    block[divisor - 1]->bloco->col_fim = mat_col;
   }
   return block;
-}
-
-int matrizesNulas(mymatriz *a, mymatriz *b)
-{
-  return (a == NULL || b == NULL);
-}
-
-int podeSomarMatrizes(mymatriz *a, mymatriz *b)
-{
-  return a->col == b->col && a->lin == b->lin;
 }
 
 void somarIJ(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j)
@@ -193,32 +197,32 @@ int podeMultiplicarMatrizes(mymatriz *a, mymatriz *b)
 
 void multIJK(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[i][j] += a->matriz[i][k] * b->matriz[j][k];
+  result->matriz[i][j] += a->matriz[i][k] * b->matriz[k][j];
 }
 
 void multIKJ(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[i][k] += a->matriz[i][j] * b->matriz[k][j];
+  result->matriz[i][k] += a->matriz[i][j] * b->matriz[j][k];
 }
 
 void multJKI(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[j][k] += a->matriz[j][i] * b->matriz[k][i];
+  result->matriz[j][k] += a->matriz[j][i] * b->matriz[i][k];
 }
 
 void multJIK(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[j][i] += a->matriz[j][k] * b->matriz[i][k];
+  result->matriz[j][i] += a->matriz[j][k] * b->matriz[k][i];
 }
 
 void multKJI(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[k][j] += a->matriz[k][i] * b->matriz[j][i];
+  result->matriz[k][j] += a->matriz[k][i] * b->matriz[i][j];
 }
 
 void multKIJ(mymatriz *result, mymatriz *a, mymatriz *b, int i, int j, int k)
 {
-  result->matriz[k][i] += a->matriz[k][j] * b->matriz[i][j];
+  result->matriz[k][i] += a->matriz[k][j] * b->matriz[j][i];
 }
 
 mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
@@ -252,42 +256,42 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
   case 0:
     multiplicarMatriz = &multIJK;
     outterLoop = mat_a->lin;
-    middleLoop = mat_b->lin;
-    innerLoop = mat_b->col;
+    middleLoop = mat_b->col;
+    innerLoop = mat_b->lin;
     break;
 
   case 1:
     multiplicarMatriz = &multIKJ;
     outterLoop = mat_a->lin;
-    middleLoop = mat_b->col;
-    innerLoop = mat_b->lin;
+    middleLoop = mat_b->lin;
+    innerLoop = mat_b->col;
     break;
 
   case 2:
     multiplicarMatriz = &multJKI;
-    outterLoop = mat_b->col;
-    middleLoop = mat_b->lin;
-    innerLoop = mat_a->lin;
-    break;
-
-  case 3:
-    multiplicarMatriz = &multJIK;
     outterLoop = mat_b->lin;
     middleLoop = mat_a->lin;
     innerLoop = mat_b->col;
     break;
 
+  case 3:
+    multiplicarMatriz = &multJIK;
+    outterLoop = mat_b->col;
+    middleLoop = mat_a->lin;
+    innerLoop = mat_b->lin;
+    break;
+
   case 4:
     multiplicarMatriz = &multKJI;
-    outterLoop = mat_b->col;
-    middleLoop = mat_b->lin;
+    outterLoop = mat_b->lin;
+    middleLoop = mat_b->col;
     innerLoop = mat_a->lin;
     break;
 
   case 5:
     multiplicarMatriz = &multKIJ;
-    outterLoop = mat_b->lin;
-    middleLoop = mat_b->col;
+    outterLoop = mat_b->col;
+    middleLoop = mat_b->lin;
     innerLoop = mat_a->lin;
     break;
 

@@ -4,10 +4,10 @@
 Revisão: set/2019
 Linguagem: C
 Versão: v3 (tools, matriz, matriz-operacoes)
-Executáveis: mainEx02 e gmat
+Executáveis: mainEx03 e gmat
 
 
-PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/002-matrizOperacoes/README.md
+PS: Para ver melhor esse arquivo, sugiro abrir no Github: https://github.com/gustavodiel/PPA/blob/master/003-matrizBlocoOperacoes/README.md
 
 
 ## Compilar
@@ -23,12 +23,12 @@ make
 
 Digitar no terminal:
 ```sh
-./mainEx02 ARQV_MATRIZ_A ARQV_MATRIZ_B
+./mainEx03 ARQV_MATRIZ_A ARQV_MATRIZ_B
 ```
 
 Por exemplo:
 ```sh
-./mainEx02 mat_a3x4.example mat_b4x3.example
+./mainEx03 mat_a3x4.example mat_b4x3.example
 ```
 
 ARQUIVOS:

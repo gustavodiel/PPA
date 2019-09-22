@@ -84,8 +84,13 @@ int main(int argc, char *argv[])
 	mmult = (mymatriz **)malloc(sizeof(mymatriz *));
 	printf("\n ##### multiplicar_t1 de Matrizes #####\n");
 	start_time = wtime();
-	mmult[0] = mmultiplicar(&mat_a, &mat_b, 0);
+	mmult[0] = mmultiplicar(&mat_a, &mat_b, 4);
 	end_time = wtime();
+
+	if (!mmult[0]) {
+		exit(1);
+	}
+
 	mimprimir(mmult[0]);
 	printf("\tRuntime: %f\n", end_time - start_time);
 	sprintf(filename, "mult_t1.result");
@@ -110,6 +115,10 @@ int main(int argc, char *argv[])
 	mmultbloco[0] = msomar(Vsubmat_c[0]->matriz, Vsubmat_c[1]->matriz, 1);
 
 	end_time = wtime();
+
+	if (!mmultbloco[0]) {
+		exit(1);
+	}
 	mimprimir(mmultbloco[0]);
 	printf("\tRuntime: %f\n", end_time - start_time);
 	sprintf(filename, "mult_t1.result");
