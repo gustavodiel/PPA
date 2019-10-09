@@ -4,7 +4,7 @@
 CC = gcc
 CCFLAGS = -Wall -O3
 LDFLAGS =
-TARGET = main_thead gmat help
+TARGET = main_thread gmat help
 
 all: $(TARGET)
 
@@ -14,8 +14,8 @@ all: $(TARGET)
 %: %.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
-main_thead: main_thead.c matrizv3.o toolsv3.o matriz-operacoesv3.o
-		$(CC) $(CCFLAGS) matriz-operacoesv3.o matrizv3.o toolsv3.o main_thead.c -o $@ $(LDFLAGS)
+main_thread: main_thread.c matrizv3.o toolsv3.o matriz-operacoesv3.o
+		$(CC) $(CCFLAGS) matriz-operacoesv3.o matrizv3.o toolsv3.o main_thread.c matriz-operacoes-thread.c -o $@ $(LDFLAGS)
 
 gmat: matrizv3.o toolsv3.o gera_matrizv3.c
 		$(CC) $(CCFLAGS) matrizv3.o toolsv3.o gera_matrizv3.c -o $@ $(LDFLAGS)
@@ -24,7 +24,7 @@ help:
 	@echo
 	@echo
 	@echo "####### Exemplo de Execução #######"
-	@echo "./main_thead mat_a3x4.example mat_b4x3.example"
+	@echo "./main_thread mat_a3x4.example mat_b4x3.example"
 
 clean:
 	rm -f *.o *~ $(TARGET) *.map *.result
