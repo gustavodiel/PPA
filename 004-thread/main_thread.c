@@ -6,6 +6,8 @@
 #include "matrizv3.h"
 #include "matriz-operacoesv3.h"
 
+#define MAX_EXECUTIONS 10
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int main(int argc, char *argv[])
 {
@@ -13,17 +15,17 @@ int main(int argc, char *argv[])
 	// %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
 	// DECLARAÇÃO de VARIÁVEIS
 	mymatriz mat_a, mat_b;
-	mymatriz **mmultbloco, **mmult;
+	mymatriz **mmultbloco, **mmult, thread_mmultbloco, thread_mmult;
 	char filename[100];
 	FILE *fmat;
 	int nr_line;
 	int *vet_line = NULL;
 	int N, M, La, Lb;
 	double start_time, end_time;
+	int num;
 
-	matriz_bloco_t **Vsubmat_a = NULL;
-	matriz_bloco_t **Vsubmat_b = NULL;
-	matriz_bloco_t **Vsubmat_c = NULL;
+	matriz_bloco_t **Vsubmat_a = NULL, **Vsubmat_b = NULL, **Vsubmat_c = NULL;
+
 	int nro_submatrizes = 2;
 
 	// %%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,22 +83,27 @@ int main(int argc, char *argv[])
 
 	// %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
 	//               Operações de Multiplicação
-	mmult = (mymatriz **)malloc(sizeof(mymatriz *));
-	printf("\n ##### multiplicar_t1 de Matrizes #####\n");
-	start_time = wtime();
-	mmult[0] = mmultiplicar(&mat_a, &mat_b, 4);
-	end_time = wtime();
 
-	if (!mmult[0]) {
-		exit(1);
+	num = MAX_EXECUTIONS;
+	while(num--){
+		int real_num = MAX_EXECUTIONS - num;
+		mmult = (mymatriz **)malloc(sizeof(mymatriz *));
+		printf("\n ##### multiplicar_t1 de Matrizes #####\n");
+		start_time = wtime();
+		mmult[0] = mmultiplicar(&mat_a, &mat_b, 4);
+		end_time = wtime();
+
+		if (!mmult[0]) {
+			exit(1);
+		}
+
+		mimprimir(mmult[0]);
+		printf("\tRuntime: %f\n", end_time - start_time);
+		sprintf(filename, "mult_t1.result");
+		fmat = fopen(filename, "w");
+		fileout_matriz(mmult[0], fmat);
+		fclose(fmat);
 	}
-
-	mimprimir(mmult[0]);
-	printf("\tRuntime: %f\n", end_time - start_time);
-	sprintf(filename, "mult_t1.result");
-	fmat = fopen(filename, "w");
-	fileout_matriz(mmult[0], fmat);
-	fclose(fmat);
 	// %%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%
 
 	// %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
