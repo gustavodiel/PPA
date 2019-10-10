@@ -9,7 +9,7 @@
 
 int matrizesNulas(void *a, void *b)
 {
-  return (a == NULL || b == NULL);
+  return (!a || !b);
 }
 
 int podeSomarMatrizes(mymatriz *a, mymatriz *b)
@@ -240,73 +240,14 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
     return NULL;
   }
 
-  int outterLoop;
-  int middleLoop;
-  int innerLoop;
+  int outterLoop = mat_a->lin;
+  int middleLoop = mat_b->lin;
+  int innerLoop = mat_b->col;
 
   int final_lin = mat_a->lin;
   int final_col = mat_b->col;
 
   int i, j, k;
-
-  void (*multiplicarMatriz)(mymatriz *, mymatriz *, mymatriz *, int, int, int);
-
-  switch (tipo)
-  {
-  case 0:
-    multiplicarMatriz = &multIJK;
-    outterLoop = mat_a->lin;
-    middleLoop = mat_b->col;
-    innerLoop = mat_b->lin;
-    break;
-
-  case 1:
-    multiplicarMatriz = &multIKJ;
-    outterLoop = mat_a->lin;
-    middleLoop = mat_b->lin;
-    innerLoop = mat_b->col;
-    break;
-
-  case 2:
-    multiplicarMatriz = &multJKI;
-    outterLoop = mat_b->lin;
-    middleLoop = mat_a->lin;
-    innerLoop = mat_b->col;
-    break;
-
-  case 3:
-    multiplicarMatriz = &multJIK;
-    outterLoop = mat_b->col;
-    middleLoop = mat_a->lin;
-    innerLoop = mat_b->lin;
-    break;
-
-  case 4:
-    multiplicarMatriz = &multKJI;
-    outterLoop = mat_b->lin;
-    middleLoop = mat_b->col;
-    innerLoop = mat_a->lin;
-    break;
-
-  case 5:
-    multiplicarMatriz = &multKIJ;
-    outterLoop = mat_b->col;
-    middleLoop = mat_b->lin;
-    innerLoop = mat_a->lin;
-    break;
-
-  default:
-    printf(
-        "Tipo desconhecido!"
-        "\n\t0 para IJK"
-        "\n\t1 para IKJ"
-        "\n\t2 para JKI"
-        "\n\t3 para JIK"
-        "\n\t4 para KJI"
-        "\n\t5 para KIJ"
-        "\n");
-    return NULL;
-  }
 
   mymatriz *result = (mymatriz *)malloc(sizeof(mymatriz));
   result->col = final_col, result->lin = final_lin;
@@ -316,11 +257,11 @@ mymatriz *mmultiplicar(mymatriz *mat_a, mymatriz *mat_b, int tipo)
 
   for (i = 0; i < outterLoop; ++i)
   {
-    for (j = 0; j < middleLoop; ++j)
+    for (k = 0; k < innerLoop; ++k)
     {
-      for (k = 0; k < innerLoop; ++k)
+      for (j = 0; j < middleLoop; ++j)
       {
-        (*multiplicarMatriz)(result, mat_a, mat_b, i, j, k);
+        result->matriz[i][k] += mat_a->matriz[i][j] * mat_b->matriz[j][k];
       }
     }
   }

@@ -8,8 +8,8 @@
 
 #include "matriz-operacoes-thread.h"
 
-#define MAX_EXECUTIONS 3
-#define NUM_THREADS 2
+#define MAX_EXECUTIONS 4
+#define NUM_THREADS 8
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int main(int argc, char *argv[]) {
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
         int real_num = MAX_EXECUTIONS - 1 - num;
         printf("\n ##### multiplicar_t%d de Matrizes #####\n", real_num);
         start_time = wtime();
-        mmult[real_num] = mmultiplicar(&mat_a, &mat_b, 4);
+        mmult[real_num] = mmultiplicar(&mat_a, &mat_b, 1);
         end_time = wtime();
 
         if (!mmult[real_num]) {
@@ -117,17 +117,17 @@ int main(int argc, char *argv[]) {
         int real_num = MAX_EXECUTIONS - 1 - num;
         printf("\n ##### THREAD - thread_multiplicar_t%d de Matrizes #####\n", real_num);
         start_time = wtime();
-        thread_mmult[0] = multiplicarTh(&mat_a, &mat_b, NUM_THREADS);
+        thread_mmult[real_num] = multiplicarTh(&mat_a, &mat_b, NUM_THREADS);
         end_time = wtime();
 
-        if (!thread_mmult[0]) {
+        if (!thread_mmult[real_num]) {
             exit(1);
         }
 
         printf("\tRuntime: %f\n", end_time - start_time);
         sprintf(filename, "mult_thread_t%d.result", real_num);
         fmat = fopen(filename, "w");
-        fileout_matriz(thread_mmult[0], fmat);
+        fileout_matriz(thread_mmult[real_num], fmat);
         fclose(fmat);
 
         thr_normal_times[real_num] = (end_time - start_time);
@@ -151,17 +151,17 @@ int main(int argc, char *argv[]) {
         mmsubmatriz(Vsubmat_a[0], Vsubmat_b[0], Vsubmat_c[0]);
         mmsubmatriz(Vsubmat_a[1], Vsubmat_b[1], Vsubmat_c[1]);
 
-        mmultbloco[0] = msomar(Vsubmat_c[0]->matriz, Vsubmat_c[1]->matriz, 1);
+        mmultbloco[real_num] = msomar(Vsubmat_c[0]->matriz, Vsubmat_c[1]->matriz, 0);
 
         end_time = wtime();
 
-        if (!mmultbloco[0]) {
+        if (!mmultbloco[real_num]) {
             exit(1);
         }
         printf("\tRuntime: %f\n", end_time - start_time);
         sprintf(filename, "mult_block_t%d.result", real_num);
         fmat = fopen(filename, "w");
-        fileout_matriz(mmultbloco[0], fmat);
+        fileout_matriz(mmultbloco[real_num], fmat);
         fclose(fmat);
 
         seq_bloco_times[real_num] = end_time - start_time;
@@ -200,19 +200,59 @@ int main(int argc, char *argv[]) {
     printf("\n ##### Comparação dos resultados da Multiplicação de matrizes #####\n");
 
     for (int i = 0; i < MAX_EXECUTIONS; i++) {
-        printf("[mult_t%d vs mult_thread_t%d]\t", i);
+        printf("[mult_t%d vs mult_thread_t%d]\n", i, i);
         mcomparar(mmult[0], thread_mmult[0]);
     }
 
     for (int i = 0; i < MAX_EXECUTIONS; i++) {
-        printf("[mult_t%d vs mult_block_t%d]\t", i);
+        printf("[mult_t%d vs mult_block_t%d]\n", i, i);
         mcomparar(mmult[0], mmultbloco[0]);
     }
 
     for (int i = 0; i < MAX_EXECUTIONS; i++) {
-        printf("[mult_t%d vs mult_block_thread_t%d]\t", i);
+        printf("[mult_t%d vs mult_block_thread_t%d]\n", i, i);
         mcomparar(mmult[0], thread_mmultbloco[0]);
     }
+
+    printf("\n######## Tempos Médios (%d execuções)\n", MAX_EXECUTIONS);
+    double tempo_normal_seq, tempo_normal_thr, tempo_bloco_seq, tempo_bloco_thr;
+
+    tempo_normal_seq = tempo_normal_thr = tempo_bloco_seq = tempo_bloco_thr = 0;
+
+    for (int i = 0; i < MAX_EXECUTIONS; i++) {
+        tempo_normal_seq += seq_normal_times[i];
+        tempo_normal_thr += thr_normal_times[i];
+        tempo_bloco_seq += seq_bloco_times[i];
+        tempo_bloco_thr += thr_bloco_times[i];
+    }
+
+    double media_normal_seq = tempo_normal_seq / (float)MAX_EXECUTIONS,
+        media_normal_thr = tempo_normal_thr / (float)MAX_EXECUTIONS,
+        media_bloco_seq = tempo_bloco_seq / (float)MAX_EXECUTIONS,
+        media_bloco_thr = tempo_bloco_thr / (float)MAX_EXECUTIONS;
+
+    printf(
+        "\nMultiplicação normal sequencial:\t%02lf\
+        \nMultiplicação normal com %d threads:\t%02lf\
+        \nMultiplicação em bloco sequencial:\t%02lf\
+        \nMultiplicação em bloco com %d threads:\t%02lf\n",
+        media_normal_seq,
+        NUM_THREADS,
+        media_normal_thr,
+        media_bloco_seq,
+        NUM_THREADS,
+        media_bloco_thr
+    );
+
+    double speedup_normal = media_normal_seq / media_normal_thr;
+    double speedup_bloco = media_bloco_seq / media_bloco_thr;
+
+    printf("\n######## Speedups\n");
+
+    printf("Multiplicação normal:\t%03lf\nMultiplicação bloco:\t%03lf\n", speedup_normal, speedup_bloco);
+
+
+
     // %%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%
 
     // %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%

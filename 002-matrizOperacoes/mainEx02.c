@@ -91,7 +91,6 @@ int main(int argc, char *argv[]) {
 		start_time = wtime();
 		mat_mult[ii] = mmultiplicar(&mat_a, &mat_b, ii);
 		end_time = wtime();
-		mimprimir(mat_mult[ii]);
 		printf("\tRuntime: %f\n", end_time - start_time);
 		sprintf(filename, "mult_t%d.result", ii);
 		fmat = fopen(filename,"w");

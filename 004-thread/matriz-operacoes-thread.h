@@ -8,10 +8,8 @@
 #include "matrizv3.h"
 
 typedef struct {
-    int **first;
-    int **second;
-    int **result;
-    int linha, lin_a, threads, col_b, col_a;
+    mymatriz* a, *b, *result;
+    int linha, threads;
 } mult_normal_package;
 
 typedef struct {

@@ -16,10 +16,10 @@
 void *mult_normal_job(void *raw_data) {
     mult_normal_package *data = (mult_normal_package *) raw_data;
 
-    for (int i = data->linha; i < data->lin_a; i += data->threads) {
-        for (int j = 0; j < data->col_b; j++) {
-            for (int k = 0; k < data->col_a; ++k) {
-                data->result[i][j] += data->first[i][k] * data->second[k][j];
+    for (int i = data->linha; i < data->a->lin; i += data->threads) {
+            for (int j = 0; j < data->b->col; j++) {
+        for (int k = 0; k < data->a->col; ++k) {
+                data->result->matriz[i][j] += data->a->matriz[i][k] * data->b->matriz[k][j];
             }
         }
     }
@@ -42,14 +42,11 @@ mymatriz *multiplicarTh(mymatriz *matrixA, mymatriz *matrixB, int thread_count) 
     int i;
 
     for (i = 0; i < thread_count; ++i) {
-        mult_content[i].first = matrixA->matriz;
-        mult_content[i].second = matrixB->matriz;
+        mult_content[i].a = matrixA;
+        mult_content[i].b = matrixB;
         mult_content[i].linha = i;
         mult_content[i].threads = thread_count;
-        mult_content[i].result = resultado->matriz;
-        mult_content[i].col_a = matrixA->col;
-        mult_content[i].col_b = matrixB->col;
-        mult_content[i].lin_a = matrixA->lin;
+        mult_content[i].result = resultado;
 
         pthread_create(&threads[i], NULL, mult_normal_job, (void *) (mult_content + i));
     }
@@ -65,6 +62,8 @@ void *mult_block_thread_job(void *raw_data) {
     mult_block_normal_package *matriz = (mult_block_normal_package *) raw_data;
 
     mmsubmatriz(matriz->first, matriz->second, matriz->result);
+
+    return NULL;
 }
 
 mymatriz *multiplicarThblocos(mymatriz *matrixA, mymatriz *matrixB, int thread_count) {
