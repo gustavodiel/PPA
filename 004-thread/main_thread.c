@@ -9,7 +9,6 @@
 #include "matriz-operacoes-thread.h"
 
 #define MAX_EXECUTIONS 4
-#define NUM_THREADS 8
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int main(int argc, char *argv[]) {
@@ -36,10 +35,12 @@ int main(int argc, char *argv[]) {
 
     // %%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%
 
-    if (argc != 3) {
-        printf("ERRO: Numero de parametros %s <matriz_a> <matriz_b>\n", argv[0]);
+    if (argc != 4) {
+        printf("ERRO: Numero de parametros %s <matriz_a> <matriz_b> <num_threads>\n", argv[0]);
         exit(1);
     }
+
+    int num_threads = atoi(argv[3]);
 
     // %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
     //                Leitura da Matriz A (arquivo)
@@ -117,7 +118,7 @@ int main(int argc, char *argv[]) {
         int real_num = MAX_EXECUTIONS - 1 - num;
         printf("\n ##### THREAD - thread_multiplicar_t%d de Matrizes #####\n", real_num);
         start_time = wtime();
-        thread_mmult[real_num] = multiplicarTh(&mat_a, &mat_b, NUM_THREADS);
+        thread_mmult[real_num] = multiplicarTh(&mat_a, &mat_b, num_threads);
         end_time = wtime();
 
         if (!thread_mmult[real_num]) {
@@ -178,7 +179,7 @@ int main(int argc, char *argv[]) {
         printf("\n ##### THREAD - thread_multiplicar_block_t%d de Matrizes #####\n", real_num);
         start_time = wtime();
 
-        thread_mmultbloco[real_num] = multiplicarThblocos(&mat_a, &mat_b, NUM_THREADS);
+        thread_mmultbloco[real_num] = multiplicarThblocos(&mat_a, &mat_b, num_threads);
 
         end_time = wtime();
 
@@ -237,10 +238,10 @@ int main(int argc, char *argv[]) {
         \nMultiplicação em bloco sequencial:\t%02lf\
         \nMultiplicação em bloco com %d threads:\t%02lf\n",
         media_normal_seq,
-        NUM_THREADS,
+        num_threads,
         media_normal_thr,
         media_bloco_seq,
-        NUM_THREADS,
+        num_threads,
         media_bloco_thr
     );
 

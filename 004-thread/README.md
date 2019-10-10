@@ -23,12 +23,12 @@ make
 
 Digitar no terminal:
 ```sh
-./main_thead ARQV_MATRIZ_A ARQV_MATRIZ_B
+./main_thead ARQV_MATRIZ_A ARQV_MATRIZ_B NUM_THREADS
 ```
 
 Por exemplo:
 ```sh
-./main_thead mat_a3x4.example mat_b4x3.example
+./main_thead mat_a3x4.example mat_b4x3.example 4
 ```
 
 ARQUIVOS:
@@ -40,5 +40,5 @@ ARQUIVOS:
  * matrizv3.h: headers das funções de gerência de matrizes que devem ser implementadas;
  * matrizv3.c: Implementado por Gustavo Diel
  * gera_matrizv3.c: fontes do programa de geração de matrizes em arquivo;
- * main_matrizv3.c: fontes do programa de teste das operações de matrizes;
+ * main_thread.c: fontes do programa de teste das operações de matrizes;
  * .gitignore: Arquivo para deixar o repositório do Git limpo (pode ignorar)

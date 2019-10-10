@@ -24,7 +24,7 @@ help:
 	@echo
 	@echo
 	@echo "####### Exemplo de Execução #######"
-	@echo "./main_thread mat_a3x4.example mat_b4x3.example"
+	@echo "./main_thread mat_a3x4.example mat_b4x3.example 4"
 
 clean:
 	rm -f *.o *~ $(TARGET) *.map *.result
