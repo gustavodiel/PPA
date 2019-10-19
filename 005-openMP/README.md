@@ -1,5 +1,5 @@
 
-# Disciplina de Programação Paralela Avançada
+# Disciplina de Programação Paralela Avançada - OpenMP
 
 Revisão: set/2019
 Linguagem: C
