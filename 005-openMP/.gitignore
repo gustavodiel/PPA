@@ -1,0 +1,12 @@
+*.result
+*.map
+*.o
+
+
+.idea/
+
+cmake-build-debug/
+
+gmat
+main_thread
+CMakeLists.txt
